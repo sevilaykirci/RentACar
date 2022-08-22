@@ -54,10 +54,20 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
             
-        [HttpGet("GetAllDtoByColorId")]
+        [HttpGet("getalldtobycolorid")]
         public IActionResult GetAllDtoByColorId(int id)
         {
             var result = _carService.GetAllDtoByColorId(id);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+        [HttpGet("getalldtobybrandid")]
+        public IActionResult GetAllDtoByBrandId(int id)
+        {
+            var result = _carService.GetAllDtoByBrandId(id);
             if (result.Success)
             {
                 return Ok(result);
@@ -87,7 +97,7 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
 
-        [HttpPost("insert")]
+        [HttpPost("add")]
         public IActionResult Insert(Car car)
         {
             var result = _carService.Insert(car);
@@ -119,7 +129,7 @@ namespace WebAPI.Controllers
             }
             return BadRequest(result);
         }
+      
 
-       
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Business.Abstract;
 using Entities.Concrete;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -8,18 +9,20 @@ using System.Threading.Tasks;
 
 namespace WebAPI.Controllers
 {
-    public class CarImagesControllers : ControllerBase
+    [Route("api/[Controller]")]
+    [ApiController] //attribute
+    public class CarImagesController: ControllerBase
     {
         ICarImageService _carImage;
-        public CarImagesControllers(ICarImageService carImage)
+        public CarImagesController(ICarImageService carImage)
         {
             _carImage = carImage;
         }
 
-        [HttpGet("getbyid")]
-        public IActionResult GetById(int id)
+        [HttpGet("getbycarid")]
+        public IActionResult GetByCarId(int id)
         {
-            var result = _carImage.GetById(id);
+            var result = _carImage.GetByCarId(id);
             if (result.Success)
             {
                 return Ok(result);
@@ -29,9 +32,9 @@ namespace WebAPI.Controllers
 
 
         [HttpPost("add")]
-        public IActionResult Insert(CarImage carImage)
+        public IActionResult Insert([FromForm(Name = ("Image"))] IFormFile file, [FromForm] CarImage carImage) //image dosyasi  ve carimage
         {
-            var result = _carImage.Insert(carImage);
+            var result = _carImage.Insert(file,carImage);
             if (result.Success)
             {
                 return Ok(result);
@@ -40,7 +43,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("update")]
-        public IActionResult Update(CarImage carImage)
+        public IActionResult Update([FromForm(Name = ("Image"))] IFormFile file, [FromForm] CarImage carImage)
         {
             var result = _carImage.Update(carImage);
             if (result.Success)

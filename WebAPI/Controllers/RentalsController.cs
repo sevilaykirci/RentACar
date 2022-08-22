@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace WebAPI.Controllers
 {
-    [Route ("api/[Controller]")]
-    [ApiController]
+    [Route("api/[Controller]")]
+    [ApiController] //attribute
     public class RentalsController : ControllerBase
     {
         IRentalService _rentalService;
@@ -18,11 +18,60 @@ namespace WebAPI.Controllers
             _rentalService = rentalService;
         }
 
-        [HttpGet]
-        public List<Rental> GetAll()
+        [HttpGet("getall")]
+        public IActionResult GetAll()
         {
             var result = _rentalService.GetAll();
-            return result.Data;
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+
+        [HttpGet("getrentalbycarid")]
+        public IActionResult Get(int id)
+        {
+            var result = _rentalService.GetRentalByCarId(id);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+
+        [HttpPost("add")]
+        public IActionResult Insert(Rental rental)
+        {
+            var result = _rentalService.Insert(rental);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+        [HttpPost("update")]
+        public IActionResult Update(Rental rental)
+        {
+            var result = _rentalService.Update(rental);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+        [HttpPost("delete")]
+        public IActionResult Delete(Rental rental)
+        {
+            var result = _rentalService.Delete(rental);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
         }
     }
 }

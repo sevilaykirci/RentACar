@@ -25,30 +25,6 @@ namespace Business.Concrete
             _tokenHelper = tokenHelper;
         }
 
-        public IDataResult<User> Register(RegisterDto registerDto)
-        {
-            var result = BusinessRules.Run(CheckIfEmailIsAlreadyRegistered(registerDto.Email));
-            if (!result.Success) return new ErrorDataResult<User>(result.Message);
-
-            byte[] passwordHash, passwordSalt;
-            HashingHelper.CreatePasswordHash(registerDto.Password, out passwordHash, out passwordSalt);
-
-            var user = new User
-            {
-                FirstName = registerDto.FirstName,
-                LastName = registerDto.LastName,
-                Email = registerDto.Email,
-                PasswordHash = passwordHash,
-                PasswordSalt = passwordSalt,
-                Status = true
-            };
-
-            var addUserResult = _userService.Add(user);
-            if (!addUserResult.Success) return new ErrorDataResult<User>(addUserResult.Message);
-
-            return new SuccessDataResult<User>(user, Messages.RegistrationSuccessful);
-        }
-
         public IDataResult<User> Login(LoginDto loginDto)
         {
             var userResult = _userService.GetByEmail(loginDto.Email);
@@ -69,7 +45,7 @@ namespace Business.Concrete
 
         public IResult UserExists(string email)
         {
-            if (_userService.GetByEmail(email) != null)
+            if (_userService.GetByEmail(email).Data != null)
             {
                 return new ErrorResult(Messages.UserAlreadyExists);
             }
@@ -84,9 +60,28 @@ namespace Business.Concrete
             return new SuccessResult();
         }
 
-        public IDataResult<User> Register(RegisterDto RegisterDto, string password)
+        public IDataResult<User> Register(RegisterDto registerDto, string password)
         {
-            throw new NotImplementedException();
+            var result = BusinessRules.Run(CheckIfEmailIsAlreadyRegistered(registerDto.Email));
+            if (result.Success != true) return new ErrorDataResult<User>(result.Message);
+
+            byte[] passwordHash, passwordSalt;
+            HashingHelper.CreatePasswordHash(registerDto.Password, out passwordHash, out passwordSalt);
+
+            var user = new User
+            {
+                FirstName = registerDto.FirstName,
+                LastName = registerDto.LastName,
+                Email = registerDto.Email,
+                PasswordHash = passwordHash,
+                PasswordSalt = passwordSalt,
+                Status = true
+            };
+
+            var addUserResult = _userService.Add(user);
+            if (!addUserResult.Success) return new ErrorDataResult<User>(addUserResult.Message);
+
+            return new SuccessDataResult<User>(user, Messages.RegistrationSuccessful);
         }
     }
 }

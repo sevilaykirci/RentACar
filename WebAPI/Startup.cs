@@ -44,7 +44,7 @@ namespace WebAPI
             //services.AddSingleton<IBrandService, BrandManager>();
             //services.AddSingleton<IBrandDal, EfBrandDal>();
 
-            
+            services.AddCors();
             
             var tokenOptions = Configuration.GetSection("TokenOptions").Get<TokenOptions>();
 
@@ -65,6 +65,7 @@ namespace WebAPI
             services.AddDependencyResolvers(new ICoreModule[] {
                 new CoreModule()
             });
+            //Params yapmak gerekiyor olabilir...
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -74,8 +75,14 @@ namespace WebAPI
             {
                 app.UseDeveloperExceptionPage();
             }
-             //middleware
+            //middleware
+            app.ConfigureCustomExceptionMiddleware();
+
+            app.UseCors(builder => builder.WithOrigins("http://localhost:4200", "http://localhost:50797").AllowAnyHeader());
+
             app.UseHttpsRedirection();
+
+            app.UseStaticFiles();
 
             app.UseRouting();
 

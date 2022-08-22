@@ -45,7 +45,6 @@ namespace Business.DependencyResolvers.Autofac
 
             builder.RegisterType<AuthManager>().As<IAuthService>().SingleInstance();
             builder.RegisterType<JwtHelper>().As<ITokenHelper>().SingleInstance();
-            builder.RegisterType<FileHelper>().As<IFileHelper>().SingleInstance();
 
             //builder.RegisterType<ImageHelper>().As<IFileHelper>();
 
@@ -53,13 +52,13 @@ namespace Business.DependencyResolvers.Autofac
 
 
 
-            var assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            //var assembly = System.Reflection.Assembly.GetExecutingAssembly();
 
-            builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces()
-                .EnableInterfaceInterceptors(new ProxyGenerationOptions()
-                {
-                    Selector = new AspectInterceptorSelector()
-                }).SingleInstance();
+            //builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces()
+            //    .EnableInterfaceInterceptors(new ProxyGenerationOptions()
+            //    {
+            //        Selector = new AspectInterceptorSelector()
+            //    }).SingleInstance();
 
         }
     }

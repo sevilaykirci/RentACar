@@ -3,6 +3,7 @@ using Business.Abstract;
 using Business.BusinessAspects.Autofac;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Validation;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
@@ -28,7 +29,8 @@ namespace Business.Concrete
             _carDal = carDal;
         }
 
-        [SecuredOperation("admin")]
+        [CacheAspect]
+        //[SecuredOperation("admin")]
         public IDataResult<List<Car>> GetAll()
         {
             return new SuccessDataResult<List<Car>>(_carDal.GetAll(), Messages.CarListed);
@@ -49,6 +51,13 @@ namespace Business.Concrete
             return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetAllDto(x => x.ColorId == id),Messages.CarListed);
         }
 
+        public IDataResult<List<CarDetailDto>> GetAllDtoByBrandId(int id)
+        {
+            return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetAllDto(x => x.BrandId == id), Messages.CarListed);
+        }
+
+
+        [CacheAspect]
         public IDataResult<Car> GetById(int id)
         {
             return new SuccessDataResult<Car>(_carDal.Get(x => x.Id == id), Messages.CarListed);
@@ -60,7 +69,10 @@ namespace Business.Concrete
         }
 
         // [ValidationAspect(typeof(productvalidator))]
+        
+        //[SecuredOperation("car.add,admin")]
         [ValidationAspect(typeof(CarValidator))] //add metodunu dogrula car validatoru kullanarak
+        [CacheRemoveAspect("ICarService.Get")]
         public IResult Insert(Car car)
         {
 
@@ -84,15 +96,18 @@ namespace Business.Concrete
             return new SuccessResult(Messages.Added);
         }
 
+        [CacheRemoveAspect("ICarService.Get")]
         public IResult Update(Car car)
         {
             _carDal.Update(car);
             return new SuccessResult(Messages.Updated);
         }
+        [CacheRemoveAspect("ICarService.Get")]
         public IResult Delete(Car car)
         {
             _carDal.Delete(car);
             return new SuccessResult(Messages.Deleted);
         }
+
     }
 }

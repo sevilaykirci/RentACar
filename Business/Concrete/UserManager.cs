@@ -33,7 +33,8 @@ namespace Business.Concrete
 
         public IResult Delete(User user)
         {
-            throw new NotImplementedException();
+            _userDal.Delete(user);
+            return new SuccessResult(Messages.Deleted);
         }
 
         public User GetByMail(string email)

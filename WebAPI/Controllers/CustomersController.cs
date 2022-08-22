@@ -19,7 +19,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        public List<Customer> GetAll()
+        public ActionResult<List<Customer>> GetAll()
         {
             var result = _customerService.GetAll();
             return result.Data;

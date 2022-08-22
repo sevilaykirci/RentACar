@@ -14,11 +14,10 @@ namespace Core.Utilities.Business
                 if (!logic.Success)
                 {
                     return logic;
-                    //basarisiz olan logici is kurallarini businessa haberdar ediyoruz.
                 }
-            }
 
-            return null;
+            }
+            return new SuccessResult();
         }
     }
 }
